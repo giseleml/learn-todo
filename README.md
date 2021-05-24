@@ -13,7 +13,7 @@ See the API's [documentation](DOCS.md).
 `curl -X POST -H "Content-Type: application/json" -u your-email:password http://localhost:9000/auth`
 It will return a token which will be necessary to call any endpoint.
 
-2) Authenticate an user 
+2) Authenticate the user 
 `curl -X GET http://0.0.0.0:9000/todo/60ab9f6807a2901c2f3be052 -i -d "access_token=YOUR-TOKEN"`
 
 ## METHODS

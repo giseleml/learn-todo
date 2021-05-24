@@ -1,0 +1,156 @@
+import request from "supertest";
+import { masterKey, apiRoot } from "../../config";
+import { signSync } from "../../services/jwt";
+import express from "../../services/express";
+import mongoose from "../../services/mongoose";
+import routes, { Todo } from ".";
+import { User } from "../user";
+
+const app = () => express(apiRoot, routes);
+
+let user1, user2, admin, session1, session2, adminSession;
+
+beforeEach(async () => {
+  user1 = await User.create({
+    name: "user",
+    email: "a@a.com",
+    password: "123456",
+  });
+  user2 = await User.create({
+    name: "user",
+    email: "b@b.com",
+    password: "123456",
+  });
+  admin = await User.create({
+    email: "c@c.com",
+    password: "123456",
+    role: "admin",
+  });
+  session1 = signSync(user1.id);
+  session2 = signSync(user2.id);
+  adminSession = signSync(admin.id);
+});
+
+test("GET /todo 200 (admin)", async () => {
+  const { status, body } = await request(app())
+    .get(apiRoot)
+    .query({ access_token: adminSession });
+  expect(status).toBe(200);
+  expect(Array.isArray(body)).toBe(true);
+});
+
+test("GET /todo 401 (user)", async () => {
+  const { status } = await request(app())
+    .get(apiRoot)
+    .query({ access_token: session1 });
+  expect(status).toBe(401);
+});
+
+test("GET /todo 401", async () => {
+  const { status } = await request(app()).get(apiRoot);
+  expect(status).toBe(401);
+});
+
+test("GET /todo/:id 200 (user)", async () => {
+  const task = await Todo.create({ content: "Finish english essay" });
+
+  const { status, body } = await request(app())
+    .get(`${apiRoot}/${task._id}`)
+    .query({ access_token: session1 });
+
+  expect(status).toBe(200);
+  expect(typeof body).toBe("object");
+  expect(body._id).toEqual(task._id.toString());
+  expect(body.content).toEqual(task.content.toString());
+  expect(body.completed).toEqual(task.completed.toString());
+});
+
+test("GET /todo/:id 404", async () => {
+  const { status } = await request(app()).get(
+    apiRoot + "/123456789098765432123456"
+  );
+  expect(status).toBe(404);
+});
+
+test("POST /todo 201 (master)", async () => {
+  const { status, body } = await request(app()).post(apiRoot).send({
+    access_token: masterKey,
+    title: "College",
+    content: "Finish essay by tomorrow",
+  });
+
+  expect(status).toBe(201);
+  expect(typeof body).toBe("object");
+  expect(body.title).toBe("College");
+  expect(body.content).toBe("Finish essay by tomorrow");
+});
+
+test("POST /todo 400 (master) without content field", async () => {
+  const errorMessage = {
+    message: "content is required",
+    name: "required",
+    param: "content",
+    required: true,
+    valid: false,
+  };
+
+  const { status, body } = await request(app())
+    .post(apiRoot)
+    .send({ access_token: masterKey, title: "Work" });
+  expect(status).toBe(400);
+  expect(typeof body).toBe("object");
+  expect(body).toEqual(errorMessage);
+});
+
+test("PUT /todo/:id 200 (user)", async () => {
+  const task = await Todo.create({ content: "Finish english essay" });
+
+  const { status, body } = await request(app())
+    .put(`${apiRoot}/${task._id}`)
+    .send({ access_token: session1, content: "Buy groceries" });
+  expect(status).toBe(200);
+  expect(typeof body).toBe("object");
+  expect(body._id).toBe(task._id.toString());
+  expect(body.content).toBe("Buy groceries");
+});
+
+test("PUT /todo/:id 401", async () => {
+  const task = await Todo.create({ content: "Finish english essay" });
+
+  const { status } = await request(app())
+    .put(`${apiRoot}/${task._id}`)
+    .send({ content: "Buy groceries" });
+  expect(status).toBe(401);
+});
+
+test("PUT /todo/:id 404 (admin)", async () => {
+  const { status } = await request(app())
+    .put(apiRoot + "/123456789098765432123456")
+    .send({ access_token: adminSession, content: "Put the trash outside" });
+  expect(status).toBe(404);
+});
+
+test("DELETE /todo/:id 204 (admin)", async () => {
+  const task = await Todo.create({ content: "Finish english essay" });
+
+  const { status } = await request(app())
+    .delete(`${apiRoot}/${task._id}`)
+    .send({ access_token: adminSession });
+  expect(status).toBe(200);
+});
+
+test("DELETE /todo/:id 401 (user)", async () => {
+  const task = await Todo.create({ content: "Finish english essay" });
+
+  const { status } = await request(app())
+    .delete(`${apiRoot}/${task._id}`)
+    .send({ access_token: session1 });
+  expect(status).toBe(401);
+});
+
+test("DELETE /users/:id 404 (admin)", async () => {
+  const { status } = await request(app())
+    .delete(apiRoot + "/123456789098765432123456")
+    .send({ access_token: adminSession });
+  expect(status).toBe(404);
+});

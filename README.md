@@ -11,14 +11,14 @@ See the API's [documentation](DOCS.md).
 ## First Steps
 1) Create an user
 
-`curl -X POST http://0.0.0.0:9000/users -i -d "email=test@example.com&password=123456&access_token=MASTER_KEY_HERE"`
+`curl -X POST http://0.0.0.0:9000/users -i -d "email=your-email&password=your-password&access_token=MASTER_KEY_HERE"`
 
 The `MASTER_KEY` can be found on the .env file.
 This API call will return a token which will be necessary to call any endpoint.
 
 2) Authenticate the user 
 
-`curl -X POST http://0.0.0.0:9000/auth -i -u test@example.com:123456 -d "access_token=MASTER_KEY_HERE"`
+`curl -X POST http://0.0.0.0:9000/auth -i -u your-email:your-password -d "access_token=MASTER_KEY_HERE"`
 
 ## METHODS
 

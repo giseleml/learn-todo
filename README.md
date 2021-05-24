@@ -13,8 +13,10 @@ See the API's [documentation](DOCS.md).
 
 `curl -X POST http://0.0.0.0:9000/users -i -d "role=admin&email=your-email&password=your-password&access_token=MASTER_KEY_HERE"`
 
-The `MASTER_KEY` can be found on the .env file.
-This API call will return a token which will be necessary to call any endpoint.
+The `MASTER_KEY` can be found on the .env file and will also be required for the next step.
+
+
+When the user is created the API will return your token which will be necessary to call any endpoint.
 
 2) Authenticate the user 
 

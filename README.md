@@ -10,26 +10,34 @@ See the API's [documentation](DOCS.md).
 
 ## First Steps
 1) Create an user
+
 `curl -X POST http://0.0.0.0:9000/users -i -d "email=test@example.com&password=123456&access_token=MASTER_KEY_HERE"`
+
 The `MASTER_KEY` can be found on the .env file.
 This API call will return a token which will be necessary to call any endpoint.
 
 2) Authenticate the user 
+
 `curl -X POST http://0.0.0.0:9000/auth -i -u test@example.com:123456 -d "access_token=MASTER_KEY_HERE"`
 
 ## METHODS
 
 - GET all to-dos
+
 `curl -X GET http://0.0.0.0:9000/todo -i -d "access_token=YOUR-TOKEN"`
 
 - GET a single to-do
+
 `curl -X GET http://0.0.0.0:9000/todo/:id -i -d "access_token=YOUR-TOKEN"`
 
 - POST a new to-do
+
 `curl -X POST -H "Content-Type: application/json" -d '{"content": "your-content", "access_token": "YOUR-TOKEN"}' http://0.0.0.0:9000/todo`
 
 - UPDATE a to-do
+
 `curl -X PUT -H "Content-Type: application/json" -d '{"content": "New content", "access_token": "YOUR-TOKEN"}' http://0.0.0.0:9000/todo/:id`
 
 - DELETE a to-do
+
 `curl -X DELETE -H "Content-Type: application/json" -d '{"access_token": "YOUR-TOKEN"}' http://0.0.0.0:9000/todo/:id`

@@ -1,0 +1,14 @@
+version: "3"
+services:
+  learn-todo:
+    build: .
+    command: npm start
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/usr/app
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+     - "27017:27017"

@@ -22,7 +22,7 @@ When the user is created the API will return your token which will be necessary 
 
 `curl -X POST http://0.0.0.0:9000/auth -i -u your-email:your-password -d "access_token=MASTER_KEY_HERE"`
 
-## METHODS
+## Methods
 
 - GET all to-dos
 

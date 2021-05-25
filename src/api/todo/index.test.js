@@ -62,7 +62,7 @@ test("GET /todo/:id 200 (user)", async () => {
   expect(typeof body).toBe("object");
   expect(body._id).toEqual(task._id.toString());
   expect(body.content).toEqual(task.content.toString());
-  expect(body.completed).toEqual(task.completed.toString());
+  expect(body.completed).toEqual(task.completed);
 });
 
 test("GET /todo/:id 404", async () => {

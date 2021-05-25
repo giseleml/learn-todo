@@ -15,7 +15,7 @@ import { schema } from "./model";
 export Todo, { schema } from "./model";
 
 const router = new Router();
-const { title, content } = schema.tree;
+const { title, content, completed } = schema.tree;
 
 router.get(
   "/",
@@ -31,7 +31,7 @@ router.post("/", body({ title, content }), createTodo);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ title, content }),
+  body({ title, content, completed }),
   updateTodo
 );
 

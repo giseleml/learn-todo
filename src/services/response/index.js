@@ -32,3 +32,14 @@ export const authorOrAdmin = (res, user, userField) => (entity) => {
   }
   return null;
 };
+
+export const invalidId = (res) => {
+  const errorMessage = {
+    code: 400,
+    message: "Invalid Id.",
+  };
+
+  res.status(400).send(errorMessage);
+
+  return null;
+};

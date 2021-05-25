@@ -17,6 +17,14 @@ export Todo, { schema } from "./model";
 const router = new Router();
 const { title, content, completed } = schema.tree;
 
+/**
+ * @api {get} /todo Retrieve to-dos
+ * @apiName RetrieveTodo
+ * @apiGroup Todo
+ * @apiUse listParams
+ * @apiSuccess {Object[]} todo List of to-dos.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
 router.get(
   "/",
   token({ required: true, roles: ["admin"] }),
@@ -24,10 +32,46 @@ router.get(
   getAllTodos
 );
 
+/**
+ * @api {get} /todo/:id Retrieve to-do
+ * @apiName RetrieveTodo
+ * @apiGroup Todo
+ * @apiSuccess {Object} todo To-do's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 To-do not found.
+ */
 router.get("/:id", getSingleTodo);
 
+/**
+ * @api {post} /todo Create to-do
+ * @apiName CreateTodo
+ * @apiGroup Todo
+ * @apiPermission user
+ * @apiParam {String} access_token user access token.
+ * @apiParam title to-do's title.
+ * @apiParam content to-do's content.
+ * @apiParam completed to-do's completion status.
+ * @apiSuccess {Object} todo To-do's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 To-do not found.
+ * @apiError 401 user access only.
+ */
 router.post("/", body({ title, content }), createTodo);
 
+/**
+ * @api {put} /todo/:id Update to-do
+ * @apiName UpdateTodo
+ * @apiGroup Todo
+ * @apiPermission user
+ * @apiParam {String} access_token user access token.
+ * @apiParam title to-do's title.
+ * @apiParam content to-do's content.
+ * @apiParam completed to-do's completion status.
+ * @apiSuccess {Object} todo To-do's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 To-do not found.
+ * @apiError 401 user access only.
+ */
 router.put(
   "/:id",
   token({ required: true }),
@@ -35,6 +79,16 @@ router.put(
   updateTodo
 );
 
+/**
+ * @api {delete} /todo/:id Delete to-do
+ * @apiName DeleteTodo
+ * @apiGroup Todo
+ * @apiPermission user
+ * @apiParam {String} access_token user access token.
+ * @apiSuccess (Success 204) 204 No Content.
+ * @apiError 404 To-do not found.
+ * @apiError 401 user access only.
+ */
 router.delete("/:id", token({ required: true, roles: ["admin"] }), deleteTodo);
 
 export default router;

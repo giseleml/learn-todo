@@ -19,6 +19,10 @@ jobs:
 
     - name: Run tests
       run: npm test
+      env:
+        global:
+        - MASTER_KEY=masterKey
+        - JWT_SECRET=jwtSecret
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1

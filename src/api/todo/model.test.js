@@ -12,7 +12,7 @@ beforeEach(async () => {
 describe("Todo Schema", () => {
   it("Sets an id, content as false and dates for created_at and edited_at", () => {
     const currentDate = new Date().toDateString();
-   
+
     expect(todo._id).toBeTruthy();
     expect(todo.completed).toBe(false);
     expect(todo.created_at.toDateString()).toBe(currentDate);
@@ -22,5 +22,15 @@ describe("Todo Schema", () => {
   it("Expects title and content to be set", () => {
     expect(todo.content).toBe("Study for the test");
     expect(todo.title).toBe("Deadline");
+  });
+
+  it("Expects to set to-do's completed as true", () => {
+    todo.complete();
+    expect(todo.completed).toBe(true);
+  });
+
+  it("Expects to set to-do's completed as false", () => {
+    todo.incomplete();
+    expect(todo.completed).toBe(false);
   });
 });

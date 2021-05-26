@@ -7,28 +7,15 @@ export const success = (res, status) => (entity) => {
 };
 
 export const notFound = (res) => (entity) => {
+  const errorMessage = {
+    message: "The requested resource could not be found.",
+  };
+
   if (entity) {
     return entity;
   }
 
-  const errorMessage = {
-    code: 404,
-    message: "The requested resource could not be found.",
-  };
-
   res.status(404).send(errorMessage);
 
-  return null;
-};
-
-export const authorOrAdmin = (res, user, userField) => (entity) => {
-  if (entity) {
-    const isAdmin = user.role === "admin";
-    const isAuthor = entity[userField] && entity[userField].equals(user.id);
-    if (isAuthor || isAdmin) {
-      return entity;
-    }
-    res.status(401).end();
-  }
   return null;
 };

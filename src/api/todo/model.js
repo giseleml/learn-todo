@@ -13,6 +13,11 @@ const todoSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    user: {
+      type: Schema.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   {
     timestamps: {
@@ -28,6 +33,13 @@ todoSchema.methods = {
   },
   incomplete() {
     return this.set("completed", false).save();
+  },
+};
+
+todoSchema.statics = {
+  findAllOwnedByUser(userId) {
+    const Todo = this;
+    return Todo.find({ user: userId });
   },
 };
 

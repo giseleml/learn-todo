@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { middleware as query } from "querymen";
 import { middleware as body } from "bodymen";
-import { master, token } from "../../services/passport";
+import { token } from "../../services/passport";
 
 import {
   getAllTodos,
@@ -27,12 +27,7 @@ const { title, content } = schema.tree;
  * @apiSuccess {Object[]} todo List of to-dos.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
-router.get(
-  "/",
-  token({ required: true, roles: ["admin"] }),
-  query(),
-  getAllTodos
-);
+router.get("/", token({ required: true }), query(), getAllTodos);
 
 /**
  * @api {get} /todo/:id Retrieve to-do
@@ -42,7 +37,7 @@ router.get(
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 To-do not found.
  */
-router.get("/:id", getSingleTodo);
+router.get("/:id", token({ required: true }), getSingleTodo);
 
 /**
  * @api {post} /todo Create to-do
@@ -58,7 +53,12 @@ router.get("/:id", getSingleTodo);
  * @apiError 404 To-do not found.
  * @apiError 401 user access only.
  */
-router.post("/", body({ title, content }), createTodo);
+router.post(
+  "/",
+  token({ required: true }),
+  body({ title, content }),
+  createTodo
+);
 
 /**
  * @api {post} /todo Set to-do as done
@@ -71,7 +71,7 @@ router.post("/", body({ title, content }), createTodo);
  * @apiError 404 To-do not found.
  * @apiError 401 user access only.
  */
-router.post("/:id/done", setTodoAsDone);
+router.post("/:id/done", token({ required: true }), setTodoAsDone);
 
 /**
  * @api {post} /todo Set to-do as not done
@@ -84,7 +84,7 @@ router.post("/:id/done", setTodoAsDone);
  * @apiError 404 To-do not found.
  * @apiError 401 user access only.
  */
-router.post("/:id/not-done", setTodoAsNotDone);
+router.post("/:id/not-done", token({ required: true }), setTodoAsNotDone);
 
 /**
  * @api {put} /todo/:id Update to-do
@@ -116,6 +116,6 @@ router.put(
  * @apiError 404 To-do not found.
  * @apiError 401 user access only.
  */
-router.delete("/:id", token({ required: true, roles: ["admin"] }), deleteTodo);
+router.delete("/:id", token({ required: true }), deleteTodo);
 
 export default router;

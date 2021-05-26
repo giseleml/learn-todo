@@ -33,7 +33,6 @@ describe("success", () => {
 describe("notFound", () => {
   it("responds with error object when object has not been passed", () => {
     const errorMessage = {
-      code: 404,
       message: "The requested resource could not be found.",
     };
 
@@ -51,41 +50,3 @@ describe("notFound", () => {
   });
 });
 
-describe("authorOrAdmin", () => {
-  let user, entity;
-
-  beforeEach(() => {
-    user = {
-      id: 1,
-      role: "user",
-    };
-    entity = {
-      author: {
-        id: 1,
-        equals(id) {
-          return id === this.id;
-        },
-      },
-    };
-  });
-
-  it("returns the passed entity when author is the same", () => {
-    expect(response.authorOrAdmin(res, user, "author")(entity)).toEqual(entity);
-  });
-
-  it("returns the passed entity when author is admin", () => {
-    user.role = "admin";
-    expect(response.authorOrAdmin(res, user, "user")(entity)).toEqual(entity);
-  });
-
-  it("responds with status 401 when author is not the same or admin", () => {
-    user.id = 2;
-    expect(response.authorOrAdmin(res, user, "author")(entity)).toBeNull();
-    expect(res.status).toBeCalledWith(401);
-    expect(res.end).toHaveBeenCalledTimes(1);
-  });
-
-  it("returns null without sending response when entity has not been passed", () => {
-    expect(response.authorOrAdmin(res, user, "author")()).toBeNull();
-  });
-});

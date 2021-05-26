@@ -23,14 +23,4 @@ describe("Todo Schema", () => {
     expect(todo.content).toBe("Study for the test");
     expect(todo.title).toBe("Deadline");
   });
-
-  it("Expects to set to-do's completed as true", () => {
-    todo.complete();
-    expect(todo.completed).toBe(true);
-  });
-
-  it("Expects to set to-do's completed as false", () => {
-    todo.incomplete();
-    expect(todo.completed).toBe(false);
-  });
 });

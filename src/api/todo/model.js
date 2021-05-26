@@ -24,10 +24,10 @@ const todoSchema = new Schema(
 
 todoSchema.methods = {
   complete() {
-    return (this.completed = true);
+    return this.set("completed", true).save();
   },
   incomplete() {
-    return (this.completed = false);
+    return this.set("completed", false).save();
   },
 };
 

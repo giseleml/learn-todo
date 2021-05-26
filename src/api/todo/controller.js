@@ -1,20 +1,16 @@
 import mongoose from "mongoose";
-import { success, notFound, checkAuthor } from "../../services/response";
+import { success, notFound } from "../../services/response";
+import { checkAuthor } from '../../services/authorization'
 import { Todo } from ".";
 
 export const getAllTodos = (
   { querymen: { query, select, cursor }, user },
   res,
   next
-) =>
-  Todo.find({ user: { _id: user._id } })
-    .populate("user")
-    .then(success(res))
-    .catch(next);
+) => Todo.findAllOwnedByUser(user._id).then(success(res)).catch(next);
 
 export const getSingleTodo = ({ params, user }, res, next) =>
   Todo.findById(params.id)
-    .populate("user")
     .then(notFound(res))
     .then(checkAuthor(res, user, "user"))
     .then(success(res))
@@ -27,7 +23,6 @@ export const createTodo = ({ bodymen: { body }, user }, res, next) =>
 
 export const updateTodo = ({ bodymen: { body }, params, user }, res, next) =>
   Todo.findById(params.id)
-    .populate("user")
     .then(notFound(res))
     .then(checkAuthor(res, user, "user"))
     .then((result) => {
@@ -40,7 +35,6 @@ export const updateTodo = ({ bodymen: { body }, params, user }, res, next) =>
 
 export const deleteTodo = ({ params, user }, res, next) =>
   Todo.findById(params.id)
-    .populate("user")
     .then(notFound(res))
     .then(checkAuthor(res, user, "user"))
     .then((todo) => (todo ? todo.remove() : null))
@@ -49,7 +43,6 @@ export const deleteTodo = ({ params, user }, res, next) =>
 
 export const setTodoAsDone = ({ params, user }, res, next) =>
   Todo.findById(params.id)
-    .populate("user")
     .then(notFound(res))
     .then(checkAuthor(res, user, "user"))
     .then((todo) => todo.complete())
@@ -58,7 +51,6 @@ export const setTodoAsDone = ({ params, user }, res, next) =>
 
 export const setTodoAsNotDone = ({ params, user }, res, next) =>
   Todo.findById(params.id)
-    .populate("user")
     .then(notFound(res))
     .then(checkAuthor(res, user, "user"))
     .then((todo) => todo.incomplete())

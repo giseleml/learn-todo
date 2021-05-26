@@ -36,6 +36,13 @@ todoSchema.methods = {
   },
 };
 
+todoSchema.statics = {
+  findAllOwnedByUser(userId) {
+    const Todo = this;
+    return Todo.find({ user: userId });
+  },
+};
+
 const model = mongoose.model("Todo", todoSchema);
 
 export const schema = model.schema;

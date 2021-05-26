@@ -12,7 +12,7 @@ beforeEach(async () => {
 describe("Todo Schema", () => {
   it("Sets an id, content as false and dates for created_at and edited_at", () => {
     const currentDate = new Date().toDateString();
-   
+
     expect(todo._id).toBeTruthy();
     expect(todo.completed).toBe(false);
     expect(todo.created_at.toDateString()).toBe(currentDate);

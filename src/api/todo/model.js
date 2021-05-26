@@ -22,6 +22,15 @@ const todoSchema = new Schema(
   }
 );
 
+todoSchema.methods = {
+  complete() {
+    return this.set("completed", true).save();
+  },
+  incomplete() {
+    return this.set("completed", false).save();
+  },
+};
+
 const model = mongoose.model("Todo", todoSchema);
 
 export const schema = model.schema;

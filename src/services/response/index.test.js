@@ -89,16 +89,3 @@ describe("authorOrAdmin", () => {
     expect(response.authorOrAdmin(res, user, "author")()).toBeNull();
   });
 });
-
-describe("Invalid Id", () => {
-  it("responds with error object when ID is not a valid mongoose object id", () => {
-    const errorMessage = {
-      code: 400,
-      message: "Invalid Id.",
-    };
-
-    expect(response.invalidId(res)).toEqual(null);
-    expect(res.status).toBeCalledWith(400);
-    expect(res.send).toHaveBeenCalledWith(errorMessage);
-  });
-});

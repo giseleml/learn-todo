@@ -72,12 +72,12 @@ test("GET /todo/:id 404", async () => {
   expect(status).toBe(404);
 });
 
-test("GET /todo/:id 400 with invalid ID", async () => {
+test("GET /todo/:id 500 with invalid ID", async () => {
   const { status } = await request(app()).get(
     apiRoot + "/123"
   );
 
-  expect(status).toBe(400);
+  expect(status).toBe(500);
 });
 
 test("POST /todo 201 (master)", async () => {
@@ -138,11 +138,11 @@ test("PUT /todo/:id 404 (admin)", async () => {
   expect(status).toBe(404);
 });
 
-test("PUT /todo/:id 400 with invalid id", async () => {
+test("PUT /todo/:id 500 with invalid id", async () => {
   const { status } = await request(app())
     .put(apiRoot + "/123")
     .send({ access_token: adminSession, content: "Put the trash outside" });
-  expect(status).toBe(400);
+  expect(status).toBe(500);
 });
 
 test("DELETE /todo/:id 204 (admin)", async () => {

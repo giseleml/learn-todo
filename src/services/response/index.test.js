@@ -51,7 +51,7 @@ describe("notFound", () => {
   });
 });
 
-describe("authorOrAdmin", () => {
+describe("checkAuthor", () => {
   let user, entity;
 
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe("authorOrAdmin", () => {
       role: "user",
     };
     entity = {
-      author: {
+      user: {
         id: 1,
         equals(id) {
           return id === this.id;
@@ -70,22 +70,22 @@ describe("authorOrAdmin", () => {
   });
 
   it("returns the passed entity when author is the same", () => {
-    expect(response.authorOrAdmin(res, user, "author")(entity)).toEqual(entity);
-  });
-
-  it("returns the passed entity when author is admin", () => {
-    user.role = "admin";
-    expect(response.authorOrAdmin(res, user, "user")(entity)).toEqual(entity);
+    expect(response.checkAuthor(res, user, "user")(entity)).toEqual(entity);
   });
 
   it("responds with status 401 when author is not the same or admin", () => {
+    const errorMessage = {
+      code: 401,
+      message: "Your are not authorized to access this content.",
+    };
+
     user.id = 2;
-    expect(response.authorOrAdmin(res, user, "author")(entity)).toBeNull();
+    expect(response.checkAuthor(res, user, "user")(entity)).toBeNull();
     expect(res.status).toBeCalledWith(401);
-    expect(res.end).toHaveBeenCalledTimes(1);
+    expect(res.send).toHaveBeenCalledWith(errorMessage);
   });
 
   it("returns null without sending response when entity has not been passed", () => {
-    expect(response.authorOrAdmin(res, user, "author")()).toBeNull();
+    expect(response.checkAuthor(res, user, "user")()).toBeNull();
   });
 });

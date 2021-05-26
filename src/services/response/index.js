@@ -7,28 +7,34 @@ export const success = (res, status) => (entity) => {
 };
 
 export const notFound = (res) => (entity) => {
-  if (entity) {
-    return entity;
-  }
-
   const errorMessage = {
     code: 404,
     message: "The requested resource could not be found.",
   };
+
+  if (entity) {
+    return entity;
+  }
 
   res.status(404).send(errorMessage);
 
   return null;
 };
 
-export const authorOrAdmin = (res, user, userField) => (entity) => {
+export const checkAuthor = (res, user, userField) => (entity) => {
+  const errorMessage = {
+    code: 401,
+    message: "Your are not authorized to access this content.",
+  };
+
   if (entity) {
-    const isAdmin = user.role === "admin";
     const isAuthor = entity[userField] && entity[userField].equals(user.id);
-    if (isAuthor || isAdmin) {
+
+    if (isAuthor) {
       return entity;
     }
-    res.status(401).end();
+
+    res.status(401).send(errorMessage);
   }
   return null;
 };

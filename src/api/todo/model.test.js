@@ -1,11 +1,15 @@
 import { Todo } from ".";
+import { User } from "../user";
 
-let todo;
+let todo, user;
 
 beforeEach(async () => {
+  user = await User.create({ email: "gi@gmail.com", password: "123456" });
+
   todo = await Todo.create({
     title: "Deadline",
     content: "Study for the test",
+    user
   });
 });
 

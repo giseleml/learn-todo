@@ -43,3 +43,25 @@ export const deleteTodo = ({ params }, res, next) =>
     .then((todo) => (todo ? todo.remove() : null))
     .then(success(res, 200))
     .catch(next);
+
+export const completeTodo = ({ params }, res, next) =>
+  Todo.findById(params.id)
+    .then(notFound(res))
+    .then((todo) => {
+      todo.completed = true;
+      return todo.save();
+    })
+    .then((todo) => todo)
+    .then(success(res))
+    .catch(next);
+
+export const incompleteTodo = ({ params }, res, next) =>
+  Todo.findById(params.id)
+    .then(notFound(res))
+    .then((todo) => {
+      todo.completed = false;
+      return todo.save();
+    })
+    .then((todo) => todo)
+    .then(success(res))
+    .catch(next);

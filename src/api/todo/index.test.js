@@ -73,9 +73,7 @@ test("GET /todo/:id 404", async () => {
 });
 
 test("GET /todo/:id 500 with invalid ID", async () => {
-  const { status } = await request(app()).get(
-    apiRoot + "/123"
-  );
+  const { status } = await request(app()).get(apiRoot + "/123");
 
   expect(status).toBe(500);
 });
@@ -168,4 +166,48 @@ test("DELETE /users/:id 404 (admin)", async () => {
     .delete(apiRoot + "/123456789098765432123456")
     .send({ access_token: adminSession });
   expect(status).toBe(404);
+});
+
+test("POST /todo/:id/done 200 (master)", async () => {
+  const task = await Todo.create({ content: "Finish english essay" });
+
+  const { status, body } = await request(app())
+    .post(`${apiRoot}/${task._id}/done`)
+    .send({
+      access_token: masterKey,
+    });
+
+  expect(status).toBe(200);
+  expect(body.completed).toBe(true);
+  expect(body.content).toBe("Finish english essay");
+});
+
+test("POST /todo/:id/done 500 (master) with invalid id", async () => {
+  const { status } = await request(app())
+    .post(`${apiRoot}/123/done`)
+    .send({ access_token: masterKey });
+
+  expect(status).toBe(500);
+});
+
+test("POST /todo/:id/not-done 200 (master)", async () => {
+  const task = await Todo.create({ content: "Finish english essay" });
+
+  const { status, body } = await request(app())
+    .post(`${apiRoot}/${task._id}/not-done`)
+    .send({
+      access_token: masterKey,
+    });
+
+  expect(status).toBe(200);
+  expect(body.completed).toBe(false);
+  expect(body.content).toBe("Finish english essay");
+});
+
+test("POST /todo/:id/not-done 500 (master) with invalid id", async () => {
+  const { status } = await request(app())
+    .post(`${apiRoot}/123/not-done`)
+    .send({ access_token: masterKey });
+
+  expect(status).toBe(500);
 });

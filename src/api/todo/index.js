@@ -9,13 +9,15 @@ import {
   createTodo,
   updateTodo,
   deleteTodo,
+  completeTodo,
+  incompleteTodo,
 } from "./controller";
 
 import { schema } from "./model";
 export Todo, { schema } from "./model";
 
 const router = new Router();
-const { title, content, completed } = schema.tree;
+const { title, content } = schema.tree;
 
 /**
  * @api {get} /todo Retrieve to-dos
@@ -59,6 +61,32 @@ router.get("/:id", getSingleTodo);
 router.post("/", body({ title, content }), createTodo);
 
 /**
+ * @api {post} /todo Set to-do as done
+ * @apiName CompleteTodo
+ * @apiGroup Todo
+ * @apiPermission user
+ * @apiParam {String} access_token user access token.
+ * @apiSuccess {Object} todo To-do's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 To-do not found.
+ * @apiError 401 user access only.
+ */
+router.post("/:id/done", completeTodo);
+
+/**
+ * @api {post} /todo Set to-do as not done
+ * @apiName IncompleteTodo
+ * @apiGroup Todo
+ * @apiPermission user
+ * @apiParam {String} access_token user access token.
+ * @apiSuccess {Object} todo To-do's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 To-do not found.
+ * @apiError 401 user access only.
+ */
+router.post("/:id/not-done", incompleteTodo);
+
+/**
  * @api {put} /todo/:id Update to-do
  * @apiName UpdateTodo
  * @apiGroup Todo
@@ -75,7 +103,7 @@ router.post("/", body({ title, content }), createTodo);
 router.put(
   "/:id",
   token({ required: true }),
-  body({ title, content, completed }),
+  body({ title, content }),
   updateTodo
 );
 

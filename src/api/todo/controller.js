@@ -12,13 +12,12 @@ export const getAllTodos = (
     .then(success(res))
     .catch(next);
 
-export const getSingleTodo = ({ params }, res, next) => {
+export const getSingleTodo = ({ params }, res, next) =>
   Todo.findById(params.id)
-    .then(notFound(res))
     .then((todos) => todos)
+    .then(notFound(res))
     .then(success(res))
     .catch(next);
-};
 
 export const createTodo = ({ bodymen: { body } }, res, next) =>
   Todo.create(body)
@@ -26,7 +25,7 @@ export const createTodo = ({ bodymen: { body } }, res, next) =>
     .then(success(res, 201))
     .catch(next);
 
-export const updateTodo = ({ bodymen: { body }, params, user }, res, next) => {
+export const updateTodo = ({ bodymen: { body }, params, user }, res, next) =>
   Todo.findById(params.id)
     .then(notFound(res))
     .then((result) => {
@@ -37,7 +36,6 @@ export const updateTodo = ({ bodymen: { body }, params, user }, res, next) => {
     .then((todo) => todo)
     .then(success(res))
     .catch(next);
-};
 
 export const deleteTodo = ({ params }, res, next) =>
   Todo.findById(params.id)

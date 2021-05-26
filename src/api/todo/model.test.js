@@ -14,7 +14,7 @@ describe("Todo Schema", () => {
     const currentDate = new Date().toDateString();
    
     expect(todo._id).toBeTruthy();
-    expect(todo.completed).toBe("false");
+    expect(todo.completed).toBe(false);
     expect(todo.created_at.toDateString()).toBe(currentDate);
     expect(todo.edited_at.toDateString()).toBe(currentDate);
   });

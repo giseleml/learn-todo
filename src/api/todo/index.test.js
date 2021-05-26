@@ -62,7 +62,7 @@ test("GET /todo/:id 200 (user)", async () => {
   expect(typeof body).toBe("object");
   expect(body._id).toEqual(task._id.toString());
   expect(body.content).toEqual(task.content.toString());
-  expect(body.completed).toEqual(task.completed.toString());
+  expect(body.completed).toEqual(task.completed);
 });
 
 test("GET /todo/:id 404", async () => {
@@ -70,6 +70,14 @@ test("GET /todo/:id 404", async () => {
     apiRoot + "/123456789098765432123456"
   );
   expect(status).toBe(404);
+});
+
+test("GET /todo/:id 500 with invalid ID", async () => {
+  const { status } = await request(app()).get(
+    apiRoot + "/123"
+  );
+
+  expect(status).toBe(500);
 });
 
 test("POST /todo 201 (master)", async () => {
@@ -128,6 +136,13 @@ test("PUT /todo/:id 404 (admin)", async () => {
     .put(apiRoot + "/123456789098765432123456")
     .send({ access_token: adminSession, content: "Put the trash outside" });
   expect(status).toBe(404);
+});
+
+test("PUT /todo/:id 500 with invalid id", async () => {
+  const { status } = await request(app())
+    .put(apiRoot + "/123")
+    .send({ access_token: adminSession, content: "Put the trash outside" });
+  expect(status).toBe(500);
 });
 
 test("DELETE /todo/:id 204 (admin)", async () => {

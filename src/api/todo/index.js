@@ -9,8 +9,8 @@ import {
   createTodo,
   updateTodo,
   deleteTodo,
-  completeTodo,
-  incompleteTodo,
+  setTodoAsDone,
+  setTodoAsNotDone,
 } from "./controller";
 
 import { schema } from "./model";
@@ -62,7 +62,7 @@ router.post("/", body({ title, content }), createTodo);
 
 /**
  * @api {post} /todo Set to-do as done
- * @apiName CompleteTodo
+ * @apiName SetTodoAsDone
  * @apiGroup Todo
  * @apiPermission user
  * @apiParam {String} access_token user access token.
@@ -71,11 +71,11 @@ router.post("/", body({ title, content }), createTodo);
  * @apiError 404 To-do not found.
  * @apiError 401 user access only.
  */
-router.post("/:id/done", completeTodo);
+router.post("/:id/done", setTodoAsDone);
 
 /**
  * @api {post} /todo Set to-do as not done
- * @apiName IncompleteTodo
+ * @apiName setTodoAsNotDone
  * @apiGroup Todo
  * @apiPermission user
  * @apiParam {String} access_token user access token.
@@ -84,7 +84,7 @@ router.post("/:id/done", completeTodo);
  * @apiError 404 To-do not found.
  * @apiError 401 user access only.
  */
-router.post("/:id/not-done", incompleteTodo);
+router.post("/:id/not-done", setTodoAsNotDone);
 
 /**
  * @api {put} /todo/:id Update to-do

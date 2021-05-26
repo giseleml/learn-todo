@@ -44,7 +44,7 @@ export const deleteTodo = ({ params }, res, next) =>
     .then(success(res, 200))
     .catch(next);
 
-export const completeTodo = ({ params }, res, next) =>
+export const setTodoAsDone = ({ params }, res, next) =>
   Todo.findById(params.id)
     .then(notFound(res))
     .then((todo) => {
@@ -55,7 +55,7 @@ export const completeTodo = ({ params }, res, next) =>
     .then(success(res))
     .catch(next);
 
-export const incompleteTodo = ({ params }, res, next) =>
+export const setTodoAsNotDone = ({ params }, res, next) =>
   Todo.findById(params.id)
     .then(notFound(res))
     .then((todo) => {

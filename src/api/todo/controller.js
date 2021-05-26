@@ -48,7 +48,7 @@ export const setTodoAsDone = ({ params }, res, next) =>
   Todo.findById(params.id)
     .then(notFound(res))
     .then((todo) => {
-      todo.completed = true;
+      todo.complete()
       return todo.save();
     })
     .then((todo) => todo)
@@ -59,7 +59,7 @@ export const setTodoAsNotDone = ({ params }, res, next) =>
   Todo.findById(params.id)
     .then(notFound(res))
     .then((todo) => {
-      todo.completed = false;
+      todo.incomplete();
       return todo.save();
     })
     .then((todo) => todo)

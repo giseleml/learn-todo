@@ -94,7 +94,6 @@ router.post("/:id/not-done", setTodoAsNotDone);
  * @apiParam {String} access_token user access token.
  * @apiParam title to-do's title.
  * @apiParam content to-do's content.
- * @apiParam completed to-do's completion status.
  * @apiSuccess {Object} todo To-do's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 To-do not found.
